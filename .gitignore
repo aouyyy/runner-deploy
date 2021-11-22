@@ -1,0 +1,8 @@
+logs/
+mysql/
+redis/
+scripts/
+node_modules/
+.env
+*.zip
+*-lock.json

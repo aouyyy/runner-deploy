@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  runner-db:
+    container_name: runner-db
+    image: mysql:8.0
+    restart: always
+    ports:
+      - '3306:3306'
+    env_file:
+      - ./.env
+    volumes:
+      - './mysql/data:/var/lib/mysql'
+
+  runner-redis:
+    container_name: runner-redis
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis/data:/data
+    command: redis-server
+
+  runner:
+    container_name: runner
+    image: runner:latest
+    restart: always
+    tty: true
+    ports:
+      - 3000:3000
+    volumes:
+      - './scripts:/app/scripts'
+      - './logs:/app/logs'
+    env_file:
+      - ./.env
+    environment:
+      - DB_HOST=runner-db
+      - REDIS_HOST=runner-redis
